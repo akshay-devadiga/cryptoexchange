@@ -1,10 +1,6 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { useState, useEffect, useCallback } from "react";
 import {
-  NumberInput,
-  NumberInputField,
-  FormErrorMessage,
   SliderTrack,
   InputRightElement,
   SliderFilledTrack,
@@ -24,7 +20,7 @@ function App() {
   const [amountUSDP, setAmountUSDP] = useState(0);
   const [amountETH, setAmountETH] = useState(0);
   const [isUSDPUpdated, setUSDPUpdated] = useState(false);
-  const [isETHUpdated, setETHUpdated] = useState(false);
+  const [isLeverageUpdated, setLeverageUpdated] = useState(false);
   const [leverage, setLeverage] = useState(1);
   const computeCurrencies = useCallback(() => {
     if (isUSDPUpdated) {
@@ -39,19 +35,20 @@ function App() {
   }, [computeCurrencies]);
 
   useEffect(() => {
-    setUSDPUpdated(!isUSDPUpdated);
+    setLeverageUpdated(true);
   }, [leverage]);
 
-  //  useEffect(() => {
-  //    //set the flag to true
-  //    setUSDPUpdated(true);
-  //  }, [amountUSDP]);
-  const updateFlags = (focusStatus) => {
-    //  if(isLeverageUpdated){
-    //   setUSDPUpdated(!focusStatus);
-    //  }else{
-    setUSDPUpdated(focusStatus);
-    // }
+  useEffect(() => {
+    if (isLeverageUpdated) {
+      setUSDPUpdated(!isUSDPUpdated);
+    } else {
+      setUSDPUpdated(isUSDPUpdated);
+    }
+  }, [isLeverageUpdated]);
+
+  const updateFlags = (status) => {
+    setUSDPUpdated(status);
+    setLeverageUpdated(false);
   };
   const disableButton = (event) => {
     return amountETH === 0 || amountUSDP === 0;
